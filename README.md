@@ -1,19 +1,43 @@
 # ping_pong_refresh
 
-A Cupertino pull-to-refresh sliver with an animated ping-pong rally.
+[![pub version](https://img.shields.io/pub/v/ping_pong_refresh.svg)](https://pub.dev/packages/ping_pong_refresh)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/AmrSabbagh35/ping-pong-refresh/blob/main/LICENSE)
 
-Drop `PingPongRefresh` into any `CustomScrollView` as a zero-dependency replacement for `CupertinoSliverRefreshControl`.
+A Cupertino pull-to-refresh sliver with an animated ping-pong rally. Drop it into any `CustomScrollView` as a zero-dependency replacement for `CupertinoSliverRefreshControl`.
 
-## Features
+---
 
-- Ball winds up between two paddles as you pull down
-- Paddles rally the ball back and forth while your refresh is in flight
-- Haptic feedback fires when the pull arms and when the refresh completes
-- Fully themeable — swap paddle colors, ball gradient, and label color
-- Ships a light theme and a dark theme out of the box
-- Zero external dependencies
+## How it works
 
-## Usage
+| Pull down | Armed | Refreshing |
+|---|---|---|
+| Ball winds up between two paddles tracking your drag | Haptic fires, paddles are fully open | Paddles rally the ball back and forth until your callback completes |
+
+- **Drag** — ball slides from left paddle to right as you pull, paddles rotate open
+- **Armed** — selection haptic fires the moment you hit the trigger threshold
+- **Refreshing** — ball bounces back and forth in a looping rally animation
+- **Done** — light haptic fires, animation stops, list springs back
+
+---
+
+## Installation
+
+Add to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  ping_pong_refresh: ^0.1.0
+```
+
+Then run:
+
+```sh
+flutter pub get
+```
+
+---
+
+## Basic usage
 
 ```dart
 import 'package:ping_pong_refresh/ping_pong_refresh.dart';
@@ -21,73 +45,123 @@ import 'package:ping_pong_refresh/ping_pong_refresh.dart';
 CustomScrollView(
   slivers: [
     PingPongRefresh(
-      onRefresh: () => runWithMinPingPongDuration(() async {
+      onRefresh: () async {
         await myRepo.reload();
-      }),
+      },
     ),
-    // ... your other slivers
+    SliverList.builder(
+      itemCount: items.length,
+      itemBuilder: (context, i) => ListTile(title: Text(items[i])),
+    ),
   ],
 )
 ```
 
-### Custom theme
+### Keep the animation visible on fast data sources
+
+Wrap your callback with `runWithMinPingPongDuration` to guarantee the rally
+plays for at least 2 seconds — otherwise it flashes past on cached or instant
+responses:
+
+```dart
+PingPongRefresh(
+  onRefresh: () => runWithMinPingPongDuration(() async {
+    await myRepo.reload();
+  }),
+)
+```
+
+---
+
+## Theming
+
+### Dark (default)
+
+```dart
+PingPongRefresh(
+  theme: PingPongTheme(), // neon lime + electric blue
+  onRefresh: () async { ... },
+)
+```
+
+### Light preset
+
+```dart
+PingPongRefresh(
+  theme: PingPongTheme.light(), // green + blue on white
+  onRefresh: () async { ... },
+)
+```
+
+### Fully custom
 
 ```dart
 PingPongRefresh(
   theme: PingPongTheme(
     leftPaddleColor: Colors.orange,
     rightPaddleColor: Colors.purple,
+    ballGradientColors: [Colors.white, Colors.orange],
+    ballGradientStops: [0.4, 1.0],
+    labelColor: Colors.grey,
+    handleColor: Color(0xFFBCAAA4),
+    handleCollarColor: Color(0xFF8D6E63),
   ),
-  onRefresh: () async { /* ... */ },
+  onRefresh: () async { ... },
 )
 ```
 
-### Light theme preset
+---
 
-```dart
-PingPongRefresh(
-  theme: PingPongTheme.light(),
-  onRefresh: () async { /* ... */ },
-)
-```
-
-### Disable haptics
+## Disable haptics
 
 ```dart
 PingPongRefresh(
   enableHaptics: false,
-  onRefresh: () async { /* ... */ },
+  onRefresh: () async { ... },
 )
 ```
 
-## Parameters
+---
+
+## API reference
+
+### PingPongRefresh
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `onRefresh` | `RefreshCallback` | required | Called when the user triggers a refresh |
-| `theme` | `PingPongTheme` | `PingPongTheme()` | Colors for paddles, ball, and label |
-| `enableHaptics` | `bool` | `true` | Whether to fire haptic feedback |
+| `theme` | `PingPongTheme` | `PingPongTheme()` | Visual configuration |
+| `enableHaptics` | `bool` | `true` | Haptic on arm + on complete |
 
-## PingPongTheme
+### PingPongTheme
 
-| Property | Default |
+| Property | Type | Default |
+|---|---|---|
+| `leftPaddleColor` | `Color` | `Color(0xFFC0F500)` — neon lime |
+| `rightPaddleColor` | `Color` | `Color(0xFF2792FF)` — electric blue |
+| `ballGradientColors` | `List<Color>` | white → lime |
+| `ballGradientStops` | `List<double>` | `[0.38, 0.78, 1.0]` |
+| `labelColor` | `Color` | `Color(0xFFC4CAAC)` |
+| `handleColor` | `Color` | `Color(0xFFCC9E64)` — wood |
+| `handleCollarColor` | `Color` | `Color(0xFF9E7645)` — dark wood |
+
+### Helpers
+
+| Symbol | Description |
 |---|---|
-| `leftPaddleColor` | `Color(0xFFC0F500)` — neon lime |
-| `rightPaddleColor` | `Color(0xFF2792FF)` — electric blue |
-| `ballGradientColors` | white → lime gradient |
-| `labelColor` | `Color(0xFFC4CAAC)` |
-| `handleColor` | `Color(0xFFCC9E64)` — wood |
-| `handleCollarColor` | `Color(0xFF9E7645)` — dark wood |
+| `runWithMinPingPongDuration(action)` | Runs `action` but ensures at least `kPingPongMinRefreshDuration` (2s) elapses |
+| `kPingPongMinRefreshDuration` | `Duration(seconds: 2)` |
 
-## runWithMinPingPongDuration
+---
 
-A convenience helper that ensures your refresh callback takes at least
-`kPingPongMinRefreshDuration` (2 seconds) to complete, so the animation
-is perceptible even on fast data sources.
+## Requirements
 
-```dart
-onRefresh: () => runWithMinPingPongDuration(() async {
-  await myRepo.reload();
-})
-```
-# ping-pong-refresh
+- Flutter `>=3.24.0`
+- Dart `>=3.5.0`
+- Works on iOS and Android. The Cupertino pull gesture is native on iOS; on Android it overlays naturally inside a `CustomScrollView`.
+
+---
+
+## License
+
+MIT © [Amr Sabbagh](https://github.com/AmrSabbagh35)
