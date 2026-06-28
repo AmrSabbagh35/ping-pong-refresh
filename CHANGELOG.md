@@ -1,3 +1,8 @@
+## 0.1.1
+
+* Fix README: replace relative image paths with raw GitHub URLs so GIFs render on pub.dev.
+* Remove duplicate Preview section from README.
+
 ## 0.1.0
 
 * Initial release.
