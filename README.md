@@ -158,6 +158,24 @@ PingPongRefresh(
 
 ---
 
+## Preview
+
+<p align="center">
+  <video src="assets/sample.mp4" width="300" autoplay loop muted playsinline></video>
+</p>
+
+> GitHub may not render the video inline — [click here to watch](assets/sample.mp4)
+
+---
+
+## Preview
+
+<p align="center">
+  <img src="assets/preview.gif" width="300" alt="ping_pong_refresh in action" />
+</p>
+
+---
+
 ## Requirements
 
 - Flutter `>=3.24.0`
