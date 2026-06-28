@@ -5,6 +5,10 @@
 
 A Cupertino pull-to-refresh sliver with an animated ping-pong rally. Drop it into any `CustomScrollView` as a zero-dependency replacement for `CupertinoSliverRefreshControl`.
 
+<p align="center">
+  <img src="assets/demo.gif" width="300" alt="ping_pong_refresh demo" />
+</p>
+
 ---
 
 ## How it works
