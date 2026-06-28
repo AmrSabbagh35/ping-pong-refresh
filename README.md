@@ -161,15 +161,6 @@ PingPongRefresh(
 ## Preview
 
 <p align="center">
-  <video src="assets/sample.mp4" width="300" autoplay loop muted playsinline></video>
-</p>
-
-
----
-
-## Preview
-
-<p align="center">
   <img src="https://raw.githubusercontent.com/AmrSabbagh35/ping-pong-refresh/main/assets/preview.gif" width="300" alt="ping_pong_refresh in action" />
 </p>
 
