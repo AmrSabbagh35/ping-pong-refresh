@@ -164,7 +164,6 @@ PingPongRefresh(
   <video src="assets/sample.mp4" width="300" autoplay loop muted playsinline></video>
 </p>
 
-> GitHub may not render the video inline — [click here to watch](assets/sample.mp4)
 
 ---
 
