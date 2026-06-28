@@ -1,7 +1,9 @@
 name: ping_pong_refresh
 description: A Cupertino pull-to-refresh sliver with an animated ping-pong rally. Drop it into any CustomScrollView as a replacement for CupertinoSliverRefreshControl.
 version: 0.1.0
-homepage: https://github.com/amrsabbagh35/ping_pong_refresh
+homepage: https://github.com/AmrSabbagh35/ping-pong-refresh
+repository: https://github.com/AmrSabbagh35/ping-pong-refresh
+issue_tracker: https://github.com/AmrSabbagh35/ping-pong-refresh/issues
 
 environment:
   sdk: ^3.5.0
